@@ -73,4 +73,4 @@ for prompt_index in range(args.num_prompts):
             image = pipe(prompt, num_inference_steps=args.steps, generator=generator, height=args.height, width=args.width)["sample"][0]
             prompt_slug = prompt.replace(', ', '_')
             image_index = (prompt_index * args.images_per_prompt) + run
-            image[0].save(f'./output/{image_index}-{seed}-{prompt_slug}.png', 'PNG')
+            image.save(f'./output/{image_index}-{seed}-{prompt_slug}.png', 'PNG')
