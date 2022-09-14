@@ -26,8 +26,8 @@ def read_prompt_file(name):
         lines = file.readlines()
         lines = [line.strip() for line in lines]
 
-        print(f'Loaded {len(lines)} items')
-        return lines
+    print(f'Loaded {len(lines)} items')
+    return lines
 
 def pick_one(arr):
     return choice(arr).strip().replace('\n', '')
@@ -67,10 +67,10 @@ for prompt_index in range(args.num_prompts):
 
     print(f'Running prompt {prompt}')
     for run in range(args.images_per_prompt):
+        seed = floor(random() * 1000000000)
+        generator = torch.Generator("cuda").manual_seed(seed)
         with autocast("cuda"):
-            seed = floor(random() * 1000000000)
-            generator = torch.Generator("cuda").manual_seed(seed)
             image = pipe(prompt, num_inference_steps=args.steps, generator=generator, height=args.height, width=args.width)["sample"][0]
-            prompt_slug = prompt.replace(', ', '_')
-            image_index = (prompt_index * args.images_per_prompt) + run
-            image.save(f'./output/{image_index}-{seed}-{prompt_slug}.png', 'PNG')
+        prompt_slug = prompt.replace(', ', '_')
+        image_index = (prompt_index * args.images_per_prompt) + run
+        image.save(f'./output/{image_index}-{seed}-{prompt_slug}.png', 'PNG')
